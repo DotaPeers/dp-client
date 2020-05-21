@@ -17,6 +17,10 @@ class PlayerWL(ObjBase):
         return self._playerId
 
     @property
+    def games(self):
+        return self.wins + self.loses
+
+    @property
     def wins(self):
         return self._data['win']
 
