@@ -4,18 +4,14 @@ import json, time
 from webRequests.RequestsGet import RequestsGet
 
 
-class ObjBase(ABC):
+class ObjBase:
+    """
+    Base Class for API objects
+    """
 
-    def __init__(self):
-        self._data = None
-
-    @abstractmethod
-    def _getUrl(self):
-        pass
-
-    def _load(self):
+    def _loadData(self, url):
         # url = 'https://api.opendota.com/api/{}'.format(self._getUrl())
-        url = 'http://localhost:8080/api/{}'.format(self._getUrl())
+        url = 'http://localhost:8080/api/{}'.format(url)
         r = RequestsGet.get(url)
 
         if r.status_code != 200:
@@ -49,4 +45,4 @@ class ObjBase(ABC):
                 print('[Fatal Error] Monthly rate limit exceeded.')
                 exit(-10)
 
-        self._data = json.loads(r.content)
+        return json.loads(r.content)

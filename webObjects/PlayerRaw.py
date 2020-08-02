@@ -12,7 +12,7 @@ class PlayerRaw(ObjBase):
         super().__init__()
         self._playerId = playerId
 
-        self._load()
+        self._loadData()
 
     @property
     def accountId(self):

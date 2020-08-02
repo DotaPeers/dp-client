@@ -1,4 +1,16 @@
 
+RANK_MAP = {
+    0: 'Uncalibrated',
+    1: 'Herald',
+    2: 'Guardian',
+    3: 'Crusader',
+    4: 'Archon',
+    5: 'Legend',
+    6: 'Ancient',
+    7: 'Divine',
+    8: 'Immortal'
+}
+
 
 class Rank:
     """
@@ -10,37 +22,32 @@ class Rank:
         self._medal, self._level = self._parseRankNbr(rankNbr)
 
     def _parseRankNbr(self, rankNbr):
-        rank_map = {
-            '1': 'Herald',
-            '2': 'Guardian',
-            '3': 'Crusader',
-            '4': 'Archon',
-            '5': 'Legend',
-            '6': 'Ancient',
-            '7': 'Divine',
-            '8': 'Immortal'
-        }
+        medal = 0
+        level = 0
 
         if rankNbr:
-            medal = rank_map[str(rankNbr)[0]]
+            medal = int(str(rankNbr)[0])
             level = int(str(rankNbr)[1])
-            return medal, level
 
-        else:
-            return 'Uncalibrated', 0
-
+        return medal, level
 
     @property
     def medal(self):
-        return self._medal
+        return RANK_MAP[self._medal]
 
     @property
     def level(self):
         return self._level
 
+    def convertBack(self):
+        """
+        Converts the medal back to the number representation
+        :return: String like "55" for Legend 5
+        """
+        return '{}{}'.format(self._medal, self._level)
 
     def __repr__(self):
-        if self.medal == 'Uncalibrated':
+        if self._medal == 0:    # Uncalibrated
             return 'Rank<{}>'.format(self.medal)
 
         else:

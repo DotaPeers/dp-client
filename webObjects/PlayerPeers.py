@@ -13,7 +13,7 @@ class PlayerPeers(ObjBase):
         self._playerId = playerId
         self._peerList = None
 
-        self._load()
+        self._loadData()
 
         # Iterator variables
         self.__max = 0
