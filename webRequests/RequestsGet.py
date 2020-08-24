@@ -12,4 +12,4 @@ class RequestsGet:
     def get(url) -> Response:
         r = requests.get(url)
 
-        return Response(r.status_code, r.content.decode(), dict(r.headers))
+        return Response(r.status_code, r.content, dict(r.headers))

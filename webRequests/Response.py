@@ -13,13 +13,13 @@ class Response:
 
 
     @property
-    def status_code(self):
+    def status_code(self) -> int:
         return self._status_code
 
     @property
-    def content(self):
+    def content(self) -> bytes:
         return self._content
 
     @property
-    def headers(self):
+    def headers(self) -> dict:
         return self._headers

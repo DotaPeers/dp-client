@@ -10,7 +10,7 @@ class ObjBase:
     """
 
     def _loadData(self, url):
-        # url = 'https://api.opendota.com/api/{}'.format(self._getUrl())
+        # url = 'https://api.opendota.com/api/{}'.format(url)
         url = 'http://localhost:8080/api/{}'.format(url)
         r = RequestsGet.get(url)
 
@@ -45,4 +45,4 @@ class ObjBase:
                 print('[Fatal Error] Monthly rate limit exceeded.')
                 exit(-10)
 
-        return json.loads(r.content)
+        return json.loads(r.content.decode())
