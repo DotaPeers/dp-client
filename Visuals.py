@@ -1,5 +1,4 @@
 import networkx as nx
-import plotly.graph_objs as go
 from fa2 import ForceAtlas2
 from fa2l import force_atlas2_layout
 import random
@@ -10,119 +9,9 @@ import math
 from pyvis.network import Network
 
 import pandas as pd
-from colour import Color
 
 from database.database import get_session
 from database.models import *
-
-# import the css template, and pass the css template into dash
-# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-# app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-# app.title = "Transaction Network"
-#
-# YEAR = [2010, 2019]
-# ACCOUNT = "A0001"
-
-
-def plotlyCode():
-    # -----  Generation of the visible parts  -----
-
-    traceRecode = []  # contains edge_trace, node_trace, middle_node_trace
-    colors = list(Color('lightcoral').range_to(Color('darkred'), len(G.edges())))
-    colors = ['rgb' + str(x.rgb) for x in colors]
-
-    # --- Add the lines between the nodes ---
-    index = 0
-    for edge in G.edges:
-        x0, y0 = G.nodes[edge[0]]['pos']
-        x1, y1 = G.nodes[edge[1]]['pos']
-        weight = float(0.1) * 10
-        trace = go.Scatter(x=tuple([x0, x1, None]), y=tuple([y0, y1, None]),
-                           mode='lines',
-                           line={'width': weight},  # Thickness
-                           marker=dict(color=colors[index]),
-                           line_shape='spline',
-                           opacity=1)
-        # Adds the lines between the nodes (but not the arrows)
-        traceRecode.append(trace)
-        index = index + 1
-
-    # --- Creates the Nodes ---
-
-    node_trace = go.Scatter(x=[], y=[], hovertext=[], text=[], mode='markers+text', textposition="bottom center",
-                            hoverinfo="text", marker={'color': 'LightSkyBlue'})
-
-    # --- Adds the hover text to the lines between the nodes ---
-
-    middle_hover_trace = go.Scatter(x=[], y=[], hovertext=[], mode='markers', hoverinfo="text",
-                                    marker={'size': 20, 'color': 'LightSkyBlue'},
-                                    opacity=0)
-
-    index = 0
-    for edge in G.edges:
-        x0, y0 = G.nodes[edge[0]]['pos']
-        x1, y1 = G.nodes[edge[1]]['pos']
-        hovertext = 'Hovertext 2'
-        middle_hover_trace['x'] += tuple([(x0 + x1) / 2])
-        middle_hover_trace['y'] += tuple([(y0 + y1) / 2])
-        middle_hover_trace['hovertext'] += tuple([hovertext])
-        index = index + 1
-
-    # Hover text for the lines
-    traceRecode.append(middle_hover_trace)
-
-    layout = go.Layout(title='Interactive Transaction Visualization', showlegend=False, hovermode='closest',
-                       margin={'b': 40, 'l': 40, 'r': 40, 't': 40},
-                       xaxis={'showgrid': False, 'zeroline': False, 'showticklabels': False},
-                       yaxis={'showgrid': False, 'zeroline': False, 'showticklabels': False},
-                       height=800,
-                       clickmode='event+select',
-                       )
-
-    index = 0
-    images = list()
-    for node in G.nodes():
-        node_trace = go.Scatter(x=[], y=[], hovertext=[], text=[], mode='markers+text', textposition="bottom center",
-                                hoverinfo="text", opacity=1)
-
-        x, y = G.nodes[node]['pos']
-        # Hovertext on the node
-        hovertext = 'Hovertext: ' + node
-        text = node  # Username
-        node_trace['x'] += tuple([x])
-        node_trace['y'] += tuple([y])
-        node_trace['hovertext'] += tuple([hovertext])
-        node_trace['text'] += tuple([text])
-        node_trace.marker.size = 2  # Size of the marker
-        index = index + 1
-
-        # Profile picture generation
-        size = random.randint(100, 400) / 100
-        images.append(
-            {'x': x - (size / 2), 'y': y + (size / 2), 'xref': 'x', 'yref': 'y', 'sizex': size, 'sizey': size,
-             'source': Image.open('profile.png')}
-        )
-
-        # Adds the nodes to the graph
-        traceRecode.append(node_trace)
-
-    figure = go.Figure(data=traceRecode, layout=layout)
-
-    for img in images:
-        figure.add_layout_image(img)
-
-    # Configure axes
-    figure.update_xaxes(
-        visible=True,
-    )
-
-    figure.update_yaxes(
-        visible=False,
-        # the scaleanchor attribute ensures that the aspect ratio stays constant
-        scaleanchor="x"
-    )
-
-    return figure
 
 
 def getTestGraph():
@@ -173,8 +62,29 @@ def _gamesToNodeSize(games: int):
 def _gamesToEdgeWeight(games: int):
     return games / 1
 
+
 def _gamesToEdgeValue(games: int):
     return games / 100
+
+
+def _addNode(G, player):
+    G.add_node(player.username,
+               size=_gamesToNodeSize(player.games),
+               shape='image',
+               image='{}/{}.png'.format(Config.PROFILE_PICTURES_FOLDER, player.accountId),
+               title="Username: {} <br> County: {} <br>Games: {} <br>Wins: {} <br>Loses: {} <br>Winrate: {} <br>Rank: {}".format(player.username, player.countryCode, player.games, player.wins, player.loses, player.winrate, player.rank.toStr()),
+               )
+
+
+def _addEdge(G, player: Player, peer: Peer):
+    player1 = player
+    player2 = peer.otherPlayer(player)
+
+    G.add_edge(player1.username, player2.username,
+               weight=_gamesToEdgeWeight(peer.games),
+               value=_gamesToEdgeValue(peer.games),
+               title='{} -> {} <br>Games: {} <br>Wins: {} <br>Loses: {} <br>Winrate: {}'.format(player1.username, player2.username, peer.games, peer.wins, peer.loses, peer.winrate),
+               )
 
 
 def _getEdges(G: nx.Graph, player, depth=0, parent=None):
@@ -184,13 +94,13 @@ def _getEdges(G: nx.Graph, player, depth=0, parent=None):
         p2 = p.player2.username
 
         if p1 not in G.nodes:
-            G.add_node(p1, size=_gamesToNodeSize(p.player1.games), shape='image', image='{}/{}.png'.format(Config.PROFILE_PICTURES_FOLDER, p.player1.accountId))
+            _addNode(G, p.player1)
 
         if p2 not in G.nodes:
-            G.add_node(p2, size=_gamesToNodeSize(p.player2.games), shape='image', image='{}/{}.png'.format(Config.PROFILE_PICTURES_FOLDER, p.player2.accountId))
+            _addNode(G, p.player2)
 
         if not G.has_edge(p1, p2) and not G.has_edge(p2, p1):
-            G.add_edge(p1, p2, weight=_gamesToEdgeWeight(p.games), value=_gamesToEdgeValue(p.games))
+            _addEdge(G, player, p)
 
         if depth < Config.MAX_RECURSION_DEPTH:
              _getEdges(G, p.otherPlayer(player), depth=depth + 1, parent=player)

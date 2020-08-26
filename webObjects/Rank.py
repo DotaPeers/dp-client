@@ -46,6 +46,13 @@ class Rank:
         """
         return '{}{}'.format(self._medal, self._level)
 
+    def toStr(self):
+        if self._medal == 0:    # Uncalibrated
+            return '{}'.format(self.medal)
+
+        else:
+            return '{} {}'.format(self.medal, self.level)
+
     def __repr__(self):
         if self._medal == 0:    # Uncalibrated
             return 'Rank<{}>'.format(self.medal)

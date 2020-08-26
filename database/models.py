@@ -1,10 +1,11 @@
 import os
 from PIL import Image, ImageDraw, ImageOps
 import io
+import datetime
 
 from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy.types as types
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from webRequests.RequestsGet import RequestsGet
 
@@ -89,6 +90,7 @@ class Player(Base, ObjBase):
     countryCode = Column(String, nullable=True)
     wins = Column(Integer, nullable=False)
     loses = Column(Integer, nullable=False)
+    timestamp = Column(DateTime, nullable=False)
 
     _from_peers = relationship('Peer', back_populates='player1', foreign_keys='Peer.player1_id', lazy=True)
     _to_peers = relationship('Peer', back_populates='player2', foreign_keys='Peer.player2_id', lazy=True)
@@ -97,6 +99,9 @@ class Player(Base, ObjBase):
         """
         Loads the object from the api
         """
+
+        # Set the timestamp
+        self.timestamp = datetime.datetime.now()
 
         # Player infos
         data = self._loadData('players/{}'.format(self.accountId))
@@ -153,6 +158,7 @@ class Peer(Base):
 
     games = Column(Integer)
     wins = Column(Integer)
+    timestamp = Column(DateTime, nullable=False)
 
     @property
     def loses(self):
