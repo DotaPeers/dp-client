@@ -17,29 +17,45 @@ class PeerLoader(ObjBase):
     def __init__(self, player, session):
         self.player = player
         self.session = session
+        self._recursionDepthMap = dict()
 
     def load(self):
-        return self._load(self.player)
+        self._load(self.player, plist=[self.player])
+        self.session.commit()
 
-    def _load(self, player, updatePeers=False, recursionDepth=0):
+    def _load(self, player, updatePeers=True, recursionDepth=0, parent=None, plist=[]):
         if recursionDepth > Config.MAX_RECURSION_DEPTH:
             return
 
-        existingPeers = player._from_peers
+        # Only continue loading when the player gets loaded earlier in the recursion so more of the players peers can be loaded
+        if player.accountId in self._recursionDepthMap and self._recursionDepthMap[player.accountId] >= recursionDepth:
+            return
+        self._recursionDepthMap[player.accountId] = recursionDepth
 
-        if not existingPeers or updatePeers:
+        print(player.username + ": " + ' -> '.join([p.username for p in plist]))
+
+        if updatePeers:
             data = self._loadData('players/{}/peers'.format(player.accountId))
             relevant = [p for p in data if p['with_games'] >= Config.GAMES_PLAYED_MIN]
 
             for p in relevant:
                 target = self._get_player(p['account_id'])
+
+                # Dont go back to the parent
+                if target == parent:
+                    continue
+
+                # Dont loop around
+                if target in plist:
+                    continue
+
                 peers1 = self.session.query(Peer).filter_by(player1=target, player2=player).all()
                 peers2 = self.session.query(Peer).filter_by(player1=player, player2=target).all()
                 if not peers1 and not peers2:
                     self._add_peer(player, target, p['with_games'], p['with_win'])
 
                 self.session.commit()
-                self._load(target, updatePeers=updatePeers, recursionDepth=recursionDepth + 1)
+                self._load(target, updatePeers=updatePeers, recursionDepth=recursionDepth + 1, parent=player, plist=plist + [target])
 
 
     def _add_peer(self, player, target, games, wins):
@@ -68,18 +84,18 @@ class PeerLoader(ObjBase):
 
 
 if __name__ == '__main__':
-    session = get_session(drop_all=False)
+    session = get_session(drop_all=True)
 
 
-    # player = Player(accountId=PLAYER_ID)
-    # player.load()
-    # session.add(player)
-    # session.commit()
+    player = Player(accountId=PLAYER_ID)
+    player.load()
+    session.add(player)
+    session.commit()
 
-    player = session.query(Player).filter_by(accountId=PLAYER_ID).first()
+    # player = session.query(Player).filter_by(accountId=PLAYER_ID).first()
 
-    # loader = PeerLoader(player, session)
-    # loader.load()
+    loader = PeerLoader(player, session)
+    loader.load()
 
     session.commit()
 

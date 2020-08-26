@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
 import json, time
 
 from webRequests.RequestsGet import RequestsGet
+import Config
 
 
 class ObjBase:
@@ -10,8 +10,10 @@ class ObjBase:
     """
 
     def _loadData(self, url):
-        # url = 'https://api.opendota.com/api/{}'.format(url)
-        url = 'http://localhost:8080/api/{}'.format(url)
+        if Config.USE_NGINX:
+            url = 'http://localhost:3214/api/{}'.format(url)
+        else:
+            url = 'https://api.opendota.com/api/{}'.format(url)
         r = RequestsGet.get(url)
 
         if r.status_code != 200:

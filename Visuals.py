@@ -1,8 +1,3 @@
-# !/usr/bin/env python3
-# -*- coding: utf-8 -*-
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
 import networkx as nx
 import plotly.graph_objs as go
 from fa2 import ForceAtlas2
@@ -10,14 +5,12 @@ from fa2l import force_atlas2_layout
 import random
 from PIL import Image
 import matplotlib.pyplot as plt
+import math
 
 from pyvis.network import Network
 
 import pandas as pd
 from colour import Color
-from datetime import datetime
-from textwrap import dedent as d
-import json
 
 from database.database import get_session
 from database.models import *
@@ -151,7 +144,7 @@ def getTestGraph():
     return G
 
 
-def _gamesToNodeSize(games: int):
+def __linearGamesToSize(games: int):
     size = games / 100
 
     if size < 20:
@@ -161,6 +154,27 @@ def _gamesToNodeSize(games: int):
         return 50
 
     return size
+
+
+def __sigmoidGamesToSize(games: int):
+    streckungY   = 28
+    streckungX   = 40
+    rechtsShift  = 1.2
+    upshift      = 5
+    gamesDivisor = 100
+
+    return streckungY * math.tanh((games / gamesDivisor / streckungX) - rechtsShift) + streckungY + upshift
+
+
+def _gamesToNodeSize(games: int):
+    return __sigmoidGamesToSize(games)
+
+
+def _gamesToEdgeWeight(games: int):
+    return games / 1
+
+def _gamesToEdgeValue(games: int):
+    return games / 100
 
 
 def _getEdges(G: nx.Graph, player, depth=0, parent=None):
@@ -176,10 +190,10 @@ def _getEdges(G: nx.Graph, player, depth=0, parent=None):
             G.add_node(p2, size=_gamesToNodeSize(p.player2.games), shape='image', image='{}/{}.png'.format(Config.PROFILE_PICTURES_FOLDER, p.player2.accountId))
 
         if not G.has_edge(p1, p2) and not G.has_edge(p2, p1):
-            G.add_edge(p1, p2, weight=p.games / 10, value=p.games / 100)
+            G.add_edge(p1, p2, weight=_gamesToEdgeWeight(p.games), value=_gamesToEdgeValue(p.games))
 
-        if depth < 2:
-             _getEdges(G, p.player1 if p.player1 != player else p.player2, depth=depth + 1, parent=player)
+        if depth < Config.MAX_RECURSION_DEPTH:
+             _getEdges(G, p.otherPlayer(player), depth=depth + 1, parent=player)
 
 
 def getPlayerGraph():
@@ -199,23 +213,23 @@ def network_graph():
 
     # Generate the positions of the nodes
     forceatlas2 = ForceAtlas2(
-                              outboundAttractionDistribution=False,  # Distributes attraction along outbound edges. Hubs attract less and thus are pushed to the borders
-                              edgeWeightInfluence=1.0,  # How much influence you give to the edges weight. 0 is "no influence" and 1 is "normal"
+                              outboundAttractionDistribution=True,  # Distributes attraction along outbound edges. Hubs attract less and thus are pushed to the borders
+                              edgeWeightInfluence=1,  # How much influence you give to the edges weight. 0 is "no influence" and 1 is "normal"
 
                               # Performance
                               jitterTolerance=0.8,  # How much swinging you allow. Above 1 discouraged. Lower gives less speed and more precision
                               barnesHutOptimize=True,   # Barnes Hut optimization, n2 complexity to n.ln(n)
-                              barnesHutTheta=1.2,
+                              barnesHutTheta=1,
 
                               # Tuning
-                              scalingRatio=0.6, # How much repulsion you want. More makes a more sparse graph
+                              scalingRatio=0.5, # How much repulsion you want. More makes a more sparse graph (spärlich)
                               strongGravityMode=False,  # A stronger gravity view
-                              gravity=0.5,  # Attracts nodes to the center. Prevents islands from drifting away
+                              gravity=0.4,  # Attracts nodes to the center. Prevents islands from drifting away
 
                               # Log
                               verbose=True
                               )
-    pos = forceatlas2.forceatlas2_networkx_layout(G, iterations=100000)
+    pos = forceatlas2.forceatlas2_networkx_layout(G, iterations=10000)
 
     # Add the generated positions to the nodes
     for node in G.nodes:
@@ -232,38 +246,4 @@ if __name__ == '__main__':
 
     nt.toggle_physics(False)
     nt.show('nt.html')
-
-# # styles: for right side hover/click component
-# styles = {
-#     'pre': {
-#         'border': 'thin lightgrey solid',
-#         'overflowX': 'scroll'
-#     }
-# }
-#
-# app.layout = html.Div([
-#     #########################Title
-#     html.Div([html.H1("Transaction Network Graph")],
-#              className="row",
-#              style={'textAlign': "center"}),
-#     #############################################################################################define the row
-#     html.Div(
-#         className="row",
-#         children=[
-#
-#             ############################################middle graph component
-#             html.Div(
-#                 className="eight columns",
-#                 children=[dcc.Graph(id="my-graph",
-#                                     figure=network_graph(YEAR, ACCOUNT))],
-#             ),
-#
-#         ]
-#     )
-# ])
-#
-#
-# if __name__ == '__main__':
-#     app.run_server(debug=True)
-
 
