@@ -87,6 +87,7 @@ class PeerLoader(ObjBase):
     - Information on hover on Nodes
     - Information on hover on Edges
     - Better graph layout
+    - Buttons on graph
 """
 
 
