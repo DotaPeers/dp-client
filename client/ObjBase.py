@@ -4,7 +4,7 @@ from webRequests.RequestsGet import RequestsGet
 import Config
 
 
-class ObjBase:
+class ObjBase(object):
     """
     Base Class for API objects
     """

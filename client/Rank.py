@@ -32,11 +32,11 @@ class Rank:
         return medal, level
 
     @property
-    def medal(self):
+    def medal(self) -> str:
         return RANK_MAP[self._medal]
 
     @property
-    def level(self):
+    def level(self) -> int:
         return self._level
 
     def convertBack(self):
@@ -44,7 +44,7 @@ class Rank:
         Converts the medal back to the number representation
         :return: String like "55" for Legend 5
         """
-        return '{}{}'.format(self._medal, self._level)
+        return int('{}{}'.format(self._medal, self._level))
 
     def toStr(self):
         if self._medal == 0:    # Uncalibrated
