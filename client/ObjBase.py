@@ -9,15 +9,20 @@ class ObjBase(object):
     Base Class for API objects
     """
 
-    def _loadData(self, url):
+    def _loadData(self, urlEnd):
         if Config.USE_NGINX:
-            url = 'http://localhost:3214/api/{}'.format(url)
+            url = 'http://localhost:3214/api/{}'.format(urlEnd)
         else:
-            url = 'https://api.opendota.com/api/{}'.format(url)
+            url = 'https://api.opendota.com/api/{}'.format(urlEnd)
         r = RequestsGet.get(url)
 
         if r.status_code != 200:
-            raise Exception('Request {} returned status code {}.'.format(url, r.status_code))
+            if r.status_code == 429:
+                print("Status code 429.")
+                time.sleep(30)
+                return self._loadData(urlEnd)
+            else:
+                raise Exception('Request {} returned status code {}.'.format(url, r.status_code))
 
         # Handle the request timeouts
         isFromCache = r.headers.get('X-Proxy-Cache', 'UNKNOWN')
@@ -35,7 +40,7 @@ class ObjBase(object):
             if limitMin == -1:
                 print('[Error] No minutely rate limit found for {}.'.format(url))
 
-            if limitMin <=3:
+            if limitMin != -1 and limitMin <= 3:
                 print('Exceded rate limit. Waiting 30s.')
                 time.sleep(30)
 
@@ -43,8 +48,9 @@ class ObjBase(object):
             if limitMonth == -1:
                 print('[Error] No monthly rate limit found for {}.'.format(url))
 
-            if limitMonth <= 100:
+            if limitMonth != -1 and limitMonth <= 100:
                 print('[Fatal Error] Monthly rate limit exceeded.')
                 exit(-10)
+
 
         return json.loads(r.content.decode())

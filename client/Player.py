@@ -1,4 +1,6 @@
 import datetime
+from typing import List, Any
+
 from PIL import Image, ImageDraw, ImageOps
 import io
 
@@ -8,32 +10,25 @@ from client.Rank import Rank
 from webRequests.RequestsGet import RequestsGet
 
 
-PEERS_GAMES_MIN = 200
+PEERS_GAMES_MIN = 150
 PROFILE_PICTURES_PATH = 'profilePictures'
 
 
 class ProfilePicture(object):
 
-    accountId = None
-    data = None
-
     def __init__(self, accountId=None):
-        self.accountId = accountId
+        self.accountId = accountId  # type: int
+        self.data = None            # type: bytes
 
 
 class Avatars(object):
 
-    accountId = None
-    small  = None
-    medium = None
-    large  = None
-    profilePicture = None
-
     def __init__(self, accountId=None, small=None, medium=None, large=None):
-        self.accountId = accountId
-        self.small = small
-        self.medium = medium
-        self.large = large
+        self.accountId = accountId      # type: str
+        self.small = small              # type: str
+        self.medium = medium            # type: str
+        self.large = large              # type: str
+        self.profilePicture = None
 
     def __del__(self):
         if self.profilePicture:
@@ -82,20 +77,17 @@ class Player(ObjBase):
     def __init__(self, accountId):
         self.accountId = accountId
 
-    accountId = None
-    username = None
-    rank = Rank(None)
-    dotaPlus = None
-    steamId = None
-    avatars = Avatars()
-    profileUrl = None
-    countryCode = None
-    wins = None
-    loses = None
+        self.username = None        # type: str
+        self.rank = Rank(None)      # type: Rank
+        self.dotaPlus = None        # type: bool
+        self.steamId = None         # type: int
+        self.avatars = Avatars()    # type: Avatars
+        self.profileUrl = None      # type: str
+        self.countryCode = None     # type: str
+        self.wins = None            # type: int
+        self.loses = None           # type: int
 
-    peers = list()
-
-    timestamp = None
+        self.timestamp = None       # type: datetime.datetime
 
     def load(self):
         """
@@ -115,6 +107,7 @@ class Player(ObjBase):
         else:
             self.rank = Rank(None)
         self.dotaPlus = data['profile']['plus']
+        self.dotaPlus = self.dotaPlus if self.dotaPlus else False
         self.steamId = data['profile']['steamid']
         self.avatars = Avatars(accountId=self.accountId,
                                small=data['profile']['avatar'],
@@ -122,6 +115,7 @@ class Player(ObjBase):
                                large=data['profile']['avatarfull'])
         self.profileUrl = data['profile']['profileurl']
         self.countryCode = data['profile']['loccountrycode']
+        self.countryCode = self.countryCode if self.countryCode else ''
 
         # Download the profile picture
         self.avatars.downloadImage('medium')
@@ -131,6 +125,26 @@ class Player(ObjBase):
         self.wins = data['win']
         self.loses = data['lose']
 
+    @property
+    def games(self):
+        return self.wins + self.loses
+
+    @property
+    def winrate(self):
+        return round(100 / (self.wins + self.loses) * self.wins, 2)
+
+    def __repr__(self) -> str:
+        return f'Player<id={self.accountId}, username={self.username}>'
+
+
+class PlayerPeers(ObjBase):
+
+    def __init__(self, accountId):
+        self.accountId = accountId  # type: int
+        self.peers = list()  # type: List[Peer]
+
+
+    def load(self):
         # Peers
         data = self._loadData('players/{}/peers'.format(self.accountId))
         relevant = [p for p in data if p['with_games'] >= PEERS_GAMES_MIN]
@@ -142,31 +156,20 @@ class Player(ObjBase):
             peer.timestamp = datetime.datetime.now()
             self.peers.append(peer)
 
-    @property
-    def games(self):
-        return self.wins + self.loses
-
-    @property
-    def winrate(self):
-        return round(100 / (self.wins + self.loses) * self.wins, 2)
-
-    def __str__(self) -> str:
-        return 'Player<id={}, username={}>'.format(self.accountId, self.username)
+    def __repr__(self) -> str:
+        return f'PlayerPeers<{len(self.peers)}>'
 
 
 class Peer(object):
 
-    def __init__(self, player1=None, player2=None):
-        self.player1 = player1
-        self.player2 = player2
+    def __init__(self, accountId1=None, accountId2=None):
+        self.accountId1 = accountId1    # type: int
+        self.accountId2 = accountId2    # type: int
 
-    player1 = None
-    player2 = None
+        self.games = None   # type: int
+        self.wins = None    # type: int
 
-    games = None
-    wins = None
-
-    timestamp = None
+        self.timestamp = None   # type: datetime.datetime
 
     @property
     def loses(self):
@@ -176,12 +179,18 @@ class Peer(object):
     def winrate(self):
         return round(100 / self.games * self.wins, 2)
 
-    def __repr__(self):
-        return 'Peer<{} -> {}>'.format(self.player1, self.player2)
+    def __repr__(self) -> str:
+        return f'Peer<{self.accountId1} -> {self.accountId2} ({self.games})>'
 
 
 if __name__ == '__main__':
     p = Player(154605920)
     p.load()
+    pp1 = PlayerPeers(154605920)
+    pp1.load()
+    print("")
+    pp2 = PlayerPeers(95157943)
+    pp2.load()
+
 
     print("")
