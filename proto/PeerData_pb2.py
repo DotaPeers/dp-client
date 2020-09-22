@@ -19,10 +19,54 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0ePeerData.proto\"7\n\x04Peer\x12\x12\n\naccountId2\x18\x01 \x01(\x05\x12\r\n\x05games\x18\x02 \x01(\x05\x12\x0c\n\x04wins\x18\x03 \x01(\x05\"!\n\x0cPeersRequest\x12\x11\n\taccountId\x18\x01 \x01(\x05\"8\n\rPeersResponse\x12\x11\n\taccountId\x18\x01 \x01(\x05\x12\x14\n\x05peers\x18\x02 \x03(\x0b\x32\x05.Peer\"7\n\x07\x41vatars\x12\r\n\x05small\x18\x01 \x01(\t\x12\x0e\n\x06medium\x18\x02 \x01(\t\x12\r\n\x05large\x18\x03 \x01(\t\"\"\n\rPlayerRequest\x12\x11\n\taccountId\x18\x01 \x01(\x05\"\xc7\x01\n\x0ePlayerResponse\x12\x11\n\taccountId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0c\n\x04rank\x18\x03 \x01(\x05\x12\x10\n\x08\x64otaPlus\x18\x04 \x01(\x08\x12\x0f\n\x07steamId\x18\x05 \x01(\t\x12\x19\n\x07\x61vatars\x18\x06 \x01(\x0b\x32\x08.Avatars\x12\x12\n\nprofileUrl\x18\x07 \x01(\t\x12\x13\n\x0b\x63ountryCode\x18\x08 \x01(\t\x12\x0c\n\x04wins\x18\t \x01(\x05\x12\r\n\x05loses\x18\n \x01(\x05\"]\n\x0fPeerDataRequest\x12\x0b\n\x03key\x18\x01 \x01(\x03\x12\x1f\n\x07players\x18\x02 \x03(\x0b\x32\x0e.PlayerRequest\x12\x1c\n\x05peers\x18\x03 \x03(\x0b\x32\r.PeersRequest\"`\n\x10PeerDataResponse\x12\x0b\n\x03key\x18\x01 \x01(\x03\x12 \n\x07players\x18\x02 \x03(\x0b\x32\x0f.PlayerResponse\x12\x1d\n\x05peers\x18\x03 \x03(\x0b\x32\x0e.PeersResponseb\x06proto3'
+  serialized_pb=b'\n\x0ePeerData.proto\"4\n\x08Metadata\x12\x0f\n\x05start\x18\x01 \x01(\x08H\x00\x12\r\n\x03\x65nd\x18\x02 \x01(\x08H\x00\x42\x08\n\x06Status\"7\n\x04Peer\x12\x12\n\naccountId2\x18\x01 \x01(\x05\x12\r\n\x05games\x18\x02 \x01(\x05\x12\x0c\n\x04wins\x18\x03 \x01(\x05\"!\n\x0cPeersRequest\x12\x11\n\taccountId\x18\x01 \x01(\x05\"8\n\rPeersResponse\x12\x11\n\taccountId\x18\x01 \x01(\x05\x12\x14\n\x05peers\x18\x02 \x03(\x0b\x32\x05.Peer\"7\n\x07\x41vatars\x12\r\n\x05small\x18\x01 \x01(\t\x12\x0e\n\x06medium\x18\x02 \x01(\t\x12\r\n\x05large\x18\x03 \x01(\t\"\"\n\rPlayerRequest\x12\x11\n\taccountId\x18\x01 \x01(\x05\"\xc7\x01\n\x0ePlayerResponse\x12\x11\n\taccountId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0c\n\x04rank\x18\x03 \x01(\x05\x12\x10\n\x08\x64otaPlus\x18\x04 \x01(\x08\x12\x0f\n\x07steamId\x18\x05 \x01(\t\x12\x19\n\x07\x61vatars\x18\x06 \x01(\x0b\x32\x08.Avatars\x12\x12\n\nprofileUrl\x18\x07 \x01(\t\x12\x13\n\x0b\x63ountryCode\x18\x08 \x01(\t\x12\x0c\n\x04wins\x18\t \x01(\x05\x12\r\n\x05loses\x18\n \x01(\x05\"z\n\x0fPeerDataRequest\x12\x0b\n\x03key\x18\x01 \x01(\x03\x12\x1f\n\x07players\x18\x02 \x03(\x0b\x32\x0e.PlayerRequest\x12\x1c\n\x05peers\x18\x03 \x03(\x0b\x32\r.PeersRequest\x12\x1b\n\x08metadata\x18\x04 \x01(\x0b\x32\t.Metadata\"`\n\x10PeerDataResponse\x12\x0b\n\x03key\x18\x01 \x01(\x03\x12 \n\x07players\x18\x02 \x03(\x0b\x32\x0f.PlayerResponse\x12\x1d\n\x05peers\x18\x03 \x03(\x0b\x32\x0e.PeersResponseb\x06proto3'
 )
 
 
+
+
+_METADATA = _descriptor.Descriptor(
+  name='Metadata',
+  full_name='Metadata',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='start', full_name='Metadata.start', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='end', full_name='Metadata.end', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='Status', full_name='Metadata.Status',
+      index=0, containing_type=None,
+      create_key=_descriptor._internal_create_key,
+    fields=[]),
+  ],
+  serialized_start=18,
+  serialized_end=70,
+)
 
 
 _PEER = _descriptor.Descriptor(
@@ -66,8 +110,8 @@ _PEER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=18,
-  serialized_end=73,
+  serialized_start=72,
+  serialized_end=127,
 )
 
 
@@ -98,8 +142,8 @@ _PEERSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=75,
-  serialized_end=108,
+  serialized_start=129,
+  serialized_end=162,
 )
 
 
@@ -137,8 +181,8 @@ _PEERSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=110,
-  serialized_end=166,
+  serialized_start=164,
+  serialized_end=220,
 )
 
 
@@ -183,8 +227,8 @@ _AVATARS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=168,
-  serialized_end=223,
+  serialized_start=222,
+  serialized_end=277,
 )
 
 
@@ -215,8 +259,8 @@ _PLAYERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=225,
-  serialized_end=259,
+  serialized_start=279,
+  serialized_end=313,
 )
 
 
@@ -310,8 +354,8 @@ _PLAYERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=262,
-  serialized_end=461,
+  serialized_start=316,
+  serialized_end=515,
 )
 
 
@@ -344,6 +388,13 @@ _PEERDATAREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='metadata', full_name='PeerDataRequest.metadata', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -356,8 +407,8 @@ _PEERDATAREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=463,
-  serialized_end=556,
+  serialized_start=517,
+  serialized_end=639,
 )
 
 
@@ -402,16 +453,24 @@ _PEERDATARESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=558,
-  serialized_end=654,
+  serialized_start=641,
+  serialized_end=737,
 )
 
+_METADATA.oneofs_by_name['Status'].fields.append(
+  _METADATA.fields_by_name['start'])
+_METADATA.fields_by_name['start'].containing_oneof = _METADATA.oneofs_by_name['Status']
+_METADATA.oneofs_by_name['Status'].fields.append(
+  _METADATA.fields_by_name['end'])
+_METADATA.fields_by_name['end'].containing_oneof = _METADATA.oneofs_by_name['Status']
 _PEERSRESPONSE.fields_by_name['peers'].message_type = _PEER
 _PLAYERRESPONSE.fields_by_name['avatars'].message_type = _AVATARS
 _PEERDATAREQUEST.fields_by_name['players'].message_type = _PLAYERREQUEST
 _PEERDATAREQUEST.fields_by_name['peers'].message_type = _PEERSREQUEST
+_PEERDATAREQUEST.fields_by_name['metadata'].message_type = _METADATA
 _PEERDATARESPONSE.fields_by_name['players'].message_type = _PLAYERRESPONSE
 _PEERDATARESPONSE.fields_by_name['peers'].message_type = _PEERSRESPONSE
+DESCRIPTOR.message_types_by_name['Metadata'] = _METADATA
 DESCRIPTOR.message_types_by_name['Peer'] = _PEER
 DESCRIPTOR.message_types_by_name['PeersRequest'] = _PEERSREQUEST
 DESCRIPTOR.message_types_by_name['PeersResponse'] = _PEERSRESPONSE
@@ -421,6 +480,13 @@ DESCRIPTOR.message_types_by_name['PlayerResponse'] = _PLAYERRESPONSE
 DESCRIPTOR.message_types_by_name['PeerDataRequest'] = _PEERDATAREQUEST
 DESCRIPTOR.message_types_by_name['PeerDataResponse'] = _PEERDATARESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+Metadata = _reflection.GeneratedProtocolMessageType('Metadata', (_message.Message,), {
+  'DESCRIPTOR' : _METADATA,
+  '__module__' : 'PeerData_pb2'
+  # @@protoc_insertion_point(class_scope:Metadata)
+  })
+_sym_db.RegisterMessage(Metadata)
 
 Peer = _reflection.GeneratedProtocolMessageType('Peer', (_message.Message,), {
   'DESCRIPTOR' : _PEER,
