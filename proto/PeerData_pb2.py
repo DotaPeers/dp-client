@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0ePeerData.proto\"4\n\x08Metadata\x12\x0f\n\x05start\x18\x01 \x01(\x08H\x00\x12\r\n\x03\x65nd\x18\x02 \x01(\x08H\x00\x42\x08\n\x06Status\"7\n\x04Peer\x12\x12\n\naccountId2\x18\x01 \x01(\x05\x12\r\n\x05games\x18\x02 \x01(\x05\x12\x0c\n\x04wins\x18\x03 \x01(\x05\"!\n\x0cPeersRequest\x12\x11\n\taccountId\x18\x01 \x01(\x05\"8\n\rPeersResponse\x12\x11\n\taccountId\x18\x01 \x01(\x05\x12\x14\n\x05peers\x18\x02 \x03(\x0b\x32\x05.Peer\"7\n\x07\x41vatars\x12\r\n\x05small\x18\x01 \x01(\t\x12\x0e\n\x06medium\x18\x02 \x01(\t\x12\r\n\x05large\x18\x03 \x01(\t\"\"\n\rPlayerRequest\x12\x11\n\taccountId\x18\x01 \x01(\x05\"\xc7\x01\n\x0ePlayerResponse\x12\x11\n\taccountId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0c\n\x04rank\x18\x03 \x01(\x05\x12\x10\n\x08\x64otaPlus\x18\x04 \x01(\x08\x12\x0f\n\x07steamId\x18\x05 \x01(\t\x12\x19\n\x07\x61vatars\x18\x06 \x01(\x0b\x32\x08.Avatars\x12\x12\n\nprofileUrl\x18\x07 \x01(\t\x12\x13\n\x0b\x63ountryCode\x18\x08 \x01(\t\x12\x0c\n\x04wins\x18\t \x01(\x05\x12\r\n\x05loses\x18\n \x01(\x05\"z\n\x0fPeerDataRequest\x12\x0b\n\x03key\x18\x01 \x01(\x03\x12\x1f\n\x07players\x18\x02 \x03(\x0b\x32\x0e.PlayerRequest\x12\x1c\n\x05peers\x18\x03 \x03(\x0b\x32\r.PeersRequest\x12\x1b\n\x08metadata\x18\x04 \x01(\x0b\x32\t.Metadata\"`\n\x10PeerDataResponse\x12\x0b\n\x03key\x18\x01 \x01(\x03\x12 \n\x07players\x18\x02 \x03(\x0b\x32\x0f.PlayerResponse\x12\x1d\n\x05peers\x18\x03 \x03(\x0b\x32\x0e.PeersResponseb\x06proto3'
+  serialized_pb=b'\n\x0ePeerData.proto\"4\n\x08Metadata\x12\x0f\n\x05start\x18\x01 \x01(\x08H\x00\x12\r\n\x03\x65nd\x18\x02 \x01(\x08H\x00\x42\x08\n\x06Status\"7\n\x04Peer\x12\x12\n\naccountId2\x18\x01 \x01(\x05\x12\r\n\x05games\x18\x02 \x01(\x05\x12\x0c\n\x04wins\x18\x03 \x01(\x05\"!\n\x0cPeersRequest\x12\x11\n\taccountId\x18\x01 \x01(\x05\"8\n\rPeersResponse\x12\x11\n\taccountId\x18\x01 \x01(\x05\x12\x14\n\x05peers\x18\x02 \x03(\x0b\x32\x05.Peer\"7\n\x07\x41vatars\x12\r\n\x05small\x18\x01 \x01(\t\x12\x0e\n\x06medium\x18\x02 \x01(\t\x12\r\n\x05large\x18\x03 \x01(\t\"\"\n\rPlayerRequest\x12\x11\n\taccountId\x18\x01 \x01(\x05\"\xdf\x01\n\x0ePlayerResponse\x12\x11\n\taccountId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0c\n\x04rank\x18\x03 \x01(\x05\x12\x10\n\x08\x64otaPlus\x18\x04 \x01(\x08\x12\x0f\n\x07steamId\x18\x05 \x01(\t\x12\x19\n\x07\x61vatars\x18\x06 \x01(\x0b\x32\x08.Avatars\x12\x12\n\nprofileUrl\x18\x07 \x01(\t\x12\x13\n\x0b\x63ountryCode\x18\x08 \x01(\t\x12\x0c\n\x04wins\x18\t \x01(\x05\x12\r\n\x05loses\x18\n \x01(\x05\x12\x16\n\x0eprofilePicture\x18\x0b \x01(\x0c\"z\n\x0fPeerDataRequest\x12\x0b\n\x03key\x18\x01 \x01(\x03\x12\x1f\n\x07players\x18\x02 \x03(\x0b\x32\x0e.PlayerRequest\x12\x1c\n\x05peers\x18\x03 \x03(\x0b\x32\r.PeersRequest\x12\x1b\n\x08metadata\x18\x04 \x01(\x0b\x32\t.Metadata\"`\n\x10PeerDataResponse\x12\x0b\n\x03key\x18\x01 \x01(\x03\x12 \n\x07players\x18\x02 \x03(\x0b\x32\x0f.PlayerResponse\x12\x1d\n\x05peers\x18\x03 \x03(\x0b\x32\x0e.PeersResponseb\x06proto3'
 )
 
 
@@ -342,6 +342,13 @@ _PLAYERRESPONSE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='profilePicture', full_name='PlayerResponse.profilePicture', index=10,
+      number=11, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"",
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -355,7 +362,7 @@ _PLAYERRESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=316,
-  serialized_end=515,
+  serialized_end=539,
 )
 
 
@@ -407,8 +414,8 @@ _PEERDATAREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=517,
-  serialized_end=639,
+  serialized_start=541,
+  serialized_end=663,
 )
 
 
@@ -453,8 +460,8 @@ _PEERDATARESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=641,
-  serialized_end=737,
+  serialized_start=665,
+  serialized_end=761,
 )
 
 _METADATA.oneofs_by_name['Status'].fields.append(

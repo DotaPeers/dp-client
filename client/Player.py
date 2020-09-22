@@ -14,13 +14,6 @@ PEERS_GAMES_MIN = 150
 PROFILE_PICTURES_PATH = 'profilePictures'
 
 
-class ProfilePicture(object):
-
-    def __init__(self, accountId=None):
-        self.accountId = accountId  # type: int
-        self.data = None            # type: bytes
-
-
 class Avatars(object):
 
     def __init__(self, accountId=None, small=None, medium=None, large=None):
@@ -28,15 +21,10 @@ class Avatars(object):
         self.small = small              # type: str
         self.medium = medium            # type: str
         self.large = large              # type: str
-        self.profilePicture = None
 
-    def __del__(self):
-        if self.profilePicture:
-            self.profilePicture.close()
-
-    def downloadImage(self, size: str):
+    def downloadImage(self, size: str) -> io.BytesIO:
         """
-        Downloads the profile picture and saves it to the profile pictures folder
+        Downloads the profile picture and and returns a BytesIO buffer containing the file
         """
 
         if size.lower() == 'small':
@@ -48,6 +36,8 @@ class Avatars(object):
         else:
             raise NotImplementedError('Size identifier {} unknown.'.format(size))
 
+        if Config.USE_NGINX:
+            url = 'http://localhost:3215' + url[31:]
 
         resp = RequestsGet.get(url)
         img = Image.open(io.BytesIO(resp.content))
@@ -63,9 +53,8 @@ class Avatars(object):
 
         buffer = io.BytesIO()
         img_round.save(buffer, 'PNG')
-        self.profilePicture = buffer
 
-        return True
+        return buffer
 
 
     def __str__(self) -> str:
@@ -186,11 +175,6 @@ class Peer(object):
 if __name__ == '__main__':
     p = Player(154605920)
     p.load()
-    pp1 = PlayerPeers(154605920)
-    pp1.load()
-    print("")
-    pp2 = PlayerPeers(95157943)
-    pp2.load()
 
 
     print("")

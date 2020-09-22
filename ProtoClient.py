@@ -28,6 +28,21 @@ class ProtoClient:
         This method logs to the console if the application is in console mode or the the console box if it's in GUI mode
         """
 
+        if isinstance(data, pdpb.PeerDataRequest):
+            _data = ''
+            if data.players:
+                _data += 'Players: '
+                _data += ', '.join([str(p.accountId) for p in data.players])
+                _data += '\n'
+
+            if data.peers:
+                _data += 'Peers:   '
+                _data += ', '.join([str(p.accountId) for p in data.peers])
+                _data += '\n'
+
+            data = _data[:-1]
+
+
         if not self.gui:
             print(data)
 
@@ -50,6 +65,7 @@ class ProtoClient:
         player.countryCode      = player_obj.countryCode
         player.wins             = player_obj.wins
         player.loses            = player_obj.loses
+        player.profilePicture   = player_obj.avatars.downloadImage('medium').getvalue()
 
         return player
 
@@ -73,7 +89,7 @@ class ProtoClient:
             self._log("Starting download...")
 
         if req.end:
-            self._log("Finished download...")
+            self._log("Finished.")
 
     async def onMessage(self, ws, data):
         req = pdpb.PeerDataRequest()
