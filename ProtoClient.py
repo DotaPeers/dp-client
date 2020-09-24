@@ -134,8 +134,11 @@ class ProtoClient:
         # Raised when the Client can't connect to the server because it's not running
         except websockets.InvalidMessage as e1:
             if 'did not receive a valid HTTP response' in str(e1):
-                self._log("️Failed to connect to the server!")
+                self._log("[Error] ️Failed to connect to the server!")
             raise e1
+        except websockets.ConnectionClosedError as e2:
+            self._log("[Error] Connection closed abnormally. Please retry.")
+            raise e2
 
 
 if __name__ == '__main__':
