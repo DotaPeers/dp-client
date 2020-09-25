@@ -19,8 +19,12 @@
   <property name="windowTitle">
    <string>DotaPeers</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../dp-server/static/img/dotalogo.png</normaloff>../../dp-server/static/img/dotalogo.png</iconset>
+  </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(145, 145, 145);</string>
+   <string notr="true">background-color: rgb(189, 93, 56);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QStackedWidget" name="stackedWidget">
@@ -134,7 +138,10 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <family>Segoe UI</family>
+        <pointsize>18</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
        </font>
       </property>
       <property name="text">

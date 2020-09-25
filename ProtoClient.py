@@ -4,13 +4,10 @@ import asyncio
 import json
 import time
 import base64
-import threading
+from argparse import ArgumentParser
 
 from proto import PeerData_pb2 as pdpb
 from client.Player import Player, PlayerPeers
-
-
-NBR = "12345"
 
 
 class ProtoClient:
@@ -18,7 +15,7 @@ class ProtoClient:
     The client which connects to the DotaPeers Server to download data
     """
 
-    def __init__(self, gui):
+    def __init__(self, gui=None):
         self.gui = gui
         self.doRun = True
 
@@ -54,18 +51,20 @@ class ProtoClient:
         player_obj = Player(req.accountId)
         player_obj.load()
 
-        player.username         = player_obj.username
-        player.rank             = player_obj.rank.convertBack()
-        player.dotaPlus         = player_obj.dotaPlus
-        player.steamId          = player_obj.steamId
-        player.avatars.small    = player_obj.avatars.small
-        player.avatars.medium   = player_obj.avatars.medium
-        player.avatars.large    = player_obj.avatars.large
-        player.profileUrl       = player_obj.profileUrl
-        player.countryCode      = player_obj.countryCode
-        player.wins             = player_obj.wins
-        player.loses            = player_obj.loses
-        player.profilePicture   = player_obj.avatars.downloadImage('medium').getvalue()
+        player.exists           = player_obj.exists
+        if player_obj.exists:
+            player.username         = player_obj.username
+            player.rank             = player_obj.rank.convertBack()
+            player.dotaPlus         = player_obj.dotaPlus
+            player.steamId          = player_obj.steamId
+            player.avatars.small    = player_obj.avatars.small
+            player.avatars.medium   = player_obj.avatars.medium
+            player.avatars.large    = player_obj.avatars.large
+            player.profileUrl       = player_obj.profileUrl
+            player.countryCode      = player_obj.countryCode
+            player.wins             = player_obj.wins
+            player.loses            = player_obj.loses
+            player.profilePicture   = player_obj.avatars.downloadImage('medium').getvalue()
 
         return player
 
@@ -142,5 +141,12 @@ class ProtoClient:
 
 
 if __name__ == '__main__':
-    client = ProtoClient(None)
-    asyncio.get_event_loop().run_until_complete(client.receiveMessages(NBR))
+    description = "Client"
+
+    parser = ArgumentParser(description=description)
+    parser.add_argument('id', type=str, help="The connection ID you get from website.")
+
+    args = parser.parse_known_args()[0]
+
+    client = ProtoClient()
+    asyncio.get_event_loop().run_until_complete(client.receiveMessages(args.id))

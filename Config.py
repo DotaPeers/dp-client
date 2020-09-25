@@ -2,8 +2,5 @@
 Stores the configuration for DotaPeers
 """
 
-GAMES_PLAYED_MIN = 200
-MAX_RECURSION_DEPTH = 1
-DATABASE_NAME = 'database.db'
-PROFILE_PICTURES_FOLDER = 'profilePictures'
+GAMES_PLAYED_MIN = 150
 USE_NGINX = True

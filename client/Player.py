@@ -10,9 +10,6 @@ from client.Rank import Rank
 from webRequests.RequestsGet import RequestsGet
 
 
-PEERS_GAMES_MIN = 150
-PROFILE_PICTURES_PATH = 'profilePictures'
-
 
 class Avatars(object):
 
@@ -66,6 +63,7 @@ class Player(ObjBase):
     def __init__(self, accountId):
         self.accountId = accountId
 
+        self.exists = None          # type: bool
         self.username = None        # type: str
         self.rank = Rank(None)      # type: Rank
         self.dotaPlus = None        # type: bool
@@ -88,8 +86,12 @@ class Player(ObjBase):
 
         # Player infos
         data = self._loadData('players/{}'.format(self.accountId))
-        print('Loaded {}.'.format(data['profile']['personaname']))
+        if 'profile' not in data:
+            self.exists = False
+            return
+        self.exists = True
 
+        print('Loaded {}.'.format(data['profile']['personaname']))
         self.username = data['profile']['personaname']
         if 'rank_tier' in data:
             self.rank = Rank(data['rank_tier'])
@@ -136,7 +138,7 @@ class PlayerPeers(ObjBase):
     def load(self):
         # Peers
         data = self._loadData('players/{}/peers'.format(self.accountId))
-        relevant = [p for p in data if p['with_games'] >= PEERS_GAMES_MIN]
+        relevant = [p for p in data if p['with_games'] >= Config.GAMES_PLAYED_MIN]
 
         for p in relevant:
             peer = Peer(self.accountId, p['account_id'])
@@ -173,7 +175,7 @@ class Peer(object):
 
 
 if __name__ == '__main__':
-    p = Player(154605920)
+    p = Player(123)
     p.load()
 
 
