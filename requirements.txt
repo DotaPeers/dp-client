@@ -4,6 +4,6 @@ websockets
 asyncio
 pillow
 
-PyQt5
+PyQt5 >= 5.15.1
 PyQt5-tools
 PyQt5-stubs
