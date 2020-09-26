@@ -17,6 +17,7 @@ class ObjBase(object):
         r = RequestsGet.get(url)
 
         if r.status_code != 200:
+            # Rate limit exceeded
             if r.status_code == 429:
                 print("Status code 429.")
                 time.sleep(30)
@@ -30,7 +31,7 @@ class ObjBase(object):
         limitMonth = int(r.headers.get('X-Rate-Limit-Remaining-Month', '-1'))
 
         # Check if the data if from the cache
-        if isFromCache == 'UNKNOWN':
+        if Config.USE_NGINX and isFromCache == 'UNKNOWN':
             print('[Error] Request {} has no information about the cache status.'.format(url))
 
         # Important: Only evaluate the rate limits if the data is not from the cache.
